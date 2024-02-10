@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func main() {
+func printSmallestDifferenceBetweenTeams() {
 	file, err := os.Open("data/football.dat")
 	if err != nil {
 		fmt.Println("There was an error opening the file: ", err)
@@ -53,7 +53,7 @@ func abs(x int) int {
 	return x
 }
 
-func main2() {
+func printSmallestWeatherTemperatureInDays() {
 	file, err := os.Open("data/weather.dat")
 	if err != nil {
 		fmt.Println("There was an error opening the file: ", err)
@@ -100,4 +100,9 @@ func main2() {
 	}
 
 	fmt.Println("Day with minimum temperature spread: ", minSpreadDay)
+}
+
+func main() {
+	printSmallestDifferenceBetweenTeams()
+	printSmallestWeatherTemperatureInDays()
 }
