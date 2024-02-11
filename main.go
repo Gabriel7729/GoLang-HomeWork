@@ -8,26 +8,32 @@ import (
 	"strings"
 )
 
-func printSmallestDifferenceBetweenTeams() {
-	file, err := os.Open("data/football.dat")
+func readFile(filename string) *os.File {
+	file, err := os.Open(filename)
 	if err != nil {
-		fmt.Println("There was an error opening the file: ", err)
-		return
+		fmt.Println(err)
 	}
+
+	return file
+}
+
+func printSmallestDifferenceTeamWin() {
+
+	file := readFile("data/football.dat")
 
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 
-	var teamWithSmallestDifference string
-	var smallestDifference int = 9999
+	var teamWithSmallestDiff string
+	var smallestDiff int = 9999
 
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		fields := strings.Fields(line)
 
-		if len(fields) < 10 || fields[0] == "Team" {
+		if len(fields) < 8 || fields[0] == "Team" {
 			continue
 		}
 
@@ -35,15 +41,16 @@ func printSmallestDifferenceBetweenTeams() {
 		goalsFor, _ := strconv.Atoi(fields[6])
 		goalsAgainst, _ := strconv.Atoi(fields[8])
 
-		goalDifference := abs(goalsFor - goalsAgainst)
-
-		if goalDifference < smallestDifference {
-			smallestDifference = goalDifference
-			teamWithSmallestDifference = team
+		goalDiff := abs(goalsFor - goalsAgainst)
+		if goalDiff < smallestDiff {
+			smallestDiff = goalDiff
+			teamWithSmallestDiff = team
 		}
+
 	}
 
-	fmt.Println("Team with smallest difference: ", teamWithSmallestDifference)
+	fmt.Printf("Team with smallest difference is %s with a difference of %d\n", teamWithSmallestDiff, smallestDiff)
+
 }
 
 func abs(x int) int {
@@ -53,22 +60,17 @@ func abs(x int) int {
 	return x
 }
 
-func printSmallestWeatherTemperatureInDays() {
-	file, err := os.Open("data/weather.dat")
-	if err != nil {
-		fmt.Println("There was an error opening the file: ", err)
-		return
-	}
+func printSmallestTempSpread() {
+	file := readFile("data/weather.dat")
 
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 
 	var minSpread int = 9999
-	var minSpreadDay int = 0
+	var minSpreadDay int
 
 	for scanner.Scan() {
-
 		line := scanner.Text()
 
 		fields := strings.Fields(line)
@@ -93,16 +95,17 @@ func printSmallestWeatherTemperatureInDays() {
 		}
 
 		spread := maxTemp - minTemp
+
 		if spread < minSpread {
 			minSpread = spread
 			minSpreadDay = day
 		}
 	}
 
-	fmt.Println("Day with minimum temperature spread: ", minSpreadDay)
+	fmt.Printf("Day %d has the minimum temperature spread of %d\n", minSpreadDay, minSpread)
 }
 
 func main() {
-	printSmallestDifferenceBetweenTeams()
-	printSmallestWeatherTemperatureInDays()
+	printSmallestDifferenceTeamWin()
+	printSmallestTempSpread()
 }
